@@ -34,13 +34,13 @@ signal counter: unsigned(15 downto 0) := to_unsigned(0,16);
 
 begin
 
-  process(clk)
+  process(clk, reset)
   begin
     if(rising_edge(clk) or rising_edge(reset)) then
       if(reset = '1') then
         counter <= to_unsigned(0,16);
       elsif(enable = '1') then
-        if(reverse <= '1') then
+        if(reverse = '1') then
           counter <= counter - to_unsigned(1,16);
         else 
           counter <= counter + to_unsigned(1,16);

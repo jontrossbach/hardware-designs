@@ -65,33 +65,34 @@ begin
   
     t_enable <= '1';
     t_reset <= '0';
-    wait for CLK_PERIOD;
+    wait for CLK_PERIOD/2;
     assert(t_output=to_unsigned(1,16)) report "initial clock test case failed" severity error; 
    
     t_reset <= '1';
-    wait for CLK_PERIOD/2; 
+    wait for CLK_PERIOD/2;
     assert(t_output=to_unsigned(0,16)) report "zero reset test case failed 1" severity error;
     
     t_reset <= '0';    
-    for i in 0 to 65535 loop
-      wait for CLK_PERIOD;
+    for i in 1 to 65535 loop
+      wait for CLK_PERIOD/2;
       assert(t_output=to_unsigned(i,16)) report "enable up test case failed" severity error;
       
       t_enable <= '0';
-      wait for CLK_PERIOD;
+      wait for CLK_PERIOD/2;
       assert(t_output=to_unsigned(i,16)) report "disable up test case failed" severity error;
       
       t_enable <= '1';  
     end loop;
-  
+    
     t_reverse <= '1';
-    for i in 65535 to 0 loop
-      wait for CLK_PERIOD;
-      assert(t_output=to_unsigned(i,16)) report "enable down test case failed" severity error;
+    for j in 0 to 65535 loop
+      
+      wait for CLK_PERIOD/2;
+      assert(t_output=to_unsigned(65534-j,16)) report "enable down test case failed" severity error;
     
       t_enable <= '0';
-      wait for CLK_PERIOD;
-      assert(t_output=to_unsigned(i,16)) report "disable down test case failed" severity error;
+      wait for CLK_PERIOD/2;
+      assert(t_output=to_unsigned(65534-j,16)) report "disable down test case failed" severity error;
     
       t_enable <= '1';  
     end loop;
@@ -99,6 +100,7 @@ begin
     --test functionality not aligned with specifications
     
     --reset left on
+    t_reverse <= '0';
     t_reset <= '1';
     wait for CLK_PERIOD;
     assert(t_output=to_unsigned(0,16)) report "zero reset test case failed 2" severity error;
@@ -115,10 +117,7 @@ begin
     t_enable <= '0';
     wait for CLK_PERIOD;
     assert(t_output=to_unsigned(0,16)) report "reset left on test case failed 3" severity error;
-    
-    t_enable <= '1';
 
-    report "all tests passed";
     finish;
   
   end process;
