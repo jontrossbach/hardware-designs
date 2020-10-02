@@ -29,7 +29,7 @@ signal counter: unsigned(31 downto 0) := to_unsigned(0,32);
 
 begin
 
-  process(clk)
+  process(clk, reset)
   begin
     if(rising_edge(clk) or falling_edge(clk) or rising_edge(reset)) then
       if(reset = '1') then
